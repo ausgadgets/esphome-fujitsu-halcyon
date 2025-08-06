@@ -225,7 +225,7 @@ async def to_code(config):
         varx,
         config[CONF_FUNCTION_UNIT],
         min_value=0,
-        max_value=15,
+        max_value=64,
         step=1
     )
 
