@@ -17,9 +17,11 @@ Packet::Packet(Buffer buffer) {
 
     this->SourceType = static_cast<AddressTypeEnum>(getField(BMS.SourceType));
     this->SourceAddress = getField(BMS.SourceAddress);
+    ESP_LOGE(TAG, "Source Address: %s", esp_err_to_name(SourceAddress));
 
     this->TokenDestinationType = static_cast<AddressTypeEnum>(getField(BMS.TokenDestinationType));
     this->TokenDestinationAddress = getField(BMS.TokenDestinationAddress);
+    ESP_LOGE(TAG, "Destination Address: %s", esp_err_to_name(TokenDestinationAddress));
 
     this->Type = static_cast<PacketTypeEnum>(getField(BMS.Type));
 
