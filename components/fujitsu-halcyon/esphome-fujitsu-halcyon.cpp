@@ -100,7 +100,7 @@ void FujitsuHalcyonController::log_buffer(const char* dir, const uint8_t* buf, s
         b ^= 0xFF;
 
     this->tzsp_send(tbuf);
-    ESP_LOGD(TAG, "%s: %02hhX %02hhX %02hhX %02hhX %02hhX %02hhX %02hhX %02hhX", dir, tbuf[0], tbuf[1], tbuf[2], tbuf[3], tbuf[4], tbuf[5], tbuf[6], tbuf[7]);
+    ESP_LOGI(TAG, "%s: %02hhX %02hhX %02hhX %02hhX %02hhX %02hhX %02hhX %02hhX", dir, tbuf[0], tbuf[1], tbuf[2], tbuf[3], tbuf[4], tbuf[5], tbuf[6], tbuf[7]);
 }
 
 void FujitsuHalcyonController::dump_config() {
