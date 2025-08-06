@@ -7,6 +7,7 @@
 using esphome::esp_log_printf_;
 
 namespace fujitsu_general::airstage::h {
+static const char* TAG = "fujitsu_general::airstage::h::Controller";
 
 Packet::Packet(Buffer buffer) {
     auto getField = [&buffer](const ByteMaskShiftData& bms) -> uint8_t {
