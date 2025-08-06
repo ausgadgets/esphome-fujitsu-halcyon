@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 
 //#include <esp_log.h>
 // Log through esphome instead of standard esp logging
