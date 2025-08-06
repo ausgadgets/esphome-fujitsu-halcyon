@@ -129,11 +129,11 @@ struct ByteMaskShiftData {
 };
 
 constexpr struct BMS {
-    constexpr static auto SourceType                  = ByteMaskShiftData(0, 0b00100000);
-    constexpr static auto SourceAddress               = ByteMaskShiftData(0, 0b00001111);
+    constexpr static auto SourceType                  = ByteMaskShiftData(0, 0b10000000);
+    constexpr static auto SourceAddress               = ByteMaskShiftData(0, 0b01111111);
 
-    constexpr static auto TokenDestinationType        = ByteMaskShiftData(1, 0b00100000);
-    constexpr static auto TokenDestinationAddress     = ByteMaskShiftData(1, 0b00001111);
+    constexpr static auto TokenDestinationType        = ByteMaskShiftData(1, 0b10000000);
+    constexpr static auto TokenDestinationAddress     = ByteMaskShiftData(1, 0b01111111);
 
     constexpr static auto Type                        = ByteMaskShiftData(2, 0b01110000);
 
