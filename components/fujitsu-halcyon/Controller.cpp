@@ -14,6 +14,7 @@ namespace fujitsu_general::airstage::h {
 static const char* TAG = "fujitsu_general::airstage::h::Controller";
 
 bool Controller::start() {
+    ESP_LOGI(TAG, "Controller::start() called - initializing UART");
     int err;
     auto uart_config = UARTConfig;
     constexpr int intr_alloc_flags = 0;
@@ -63,6 +64,7 @@ bool Controller::start() {
 
     xTaskCreate([](void* o){ static_cast<Controller*>(o)->uart_event_task(); }, "UART_Event", stack_depth, this, task_priority, NULL);
 
+    ESP_LOGI(TAG, "Controller::start() completed successfully");
     return true;
 }
 
@@ -73,6 +75,7 @@ void Controller::uart_event_task() {
         if (xQueueReceive(this->uart_event_queue, &event, portMAX_DELAY)) {
             switch(event.type) {
                 [[likely]] case UART_DATA:
+                    ESP_LOGI(TAG, "UART_DATA event received - size: %d bytes", event.size);
                     Packet::Buffer buffer;
                     size_t buffer_len;
 
@@ -87,10 +90,9 @@ void Controller::uart_event_task() {
                     for (auto i = 0; i < event.size / buffer.size(); i++) {
                         this->uart_read_bytes(buffer.data(), buffer.size());
                         uart_get_buffered_data_len(this->uart_num, &buffer_len);
+                        ESP_LOGI(TAG, "Processing frame %d, buffer_len=%d, lastPacket=%s", i, buffer_len, (buffer_len == 0) ? "true" : "false");
                         this->process_packet(buffer, buffer_len == 0 /* Indicates final packet on wire */);
                     }
-
-                    break;
 
                 case UART_BREAK:
                     // TODO Why rx break after tx?
