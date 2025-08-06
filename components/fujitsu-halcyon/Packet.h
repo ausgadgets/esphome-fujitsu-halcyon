@@ -152,7 +152,7 @@ constexpr struct BMS {
                 constexpr static auto Primary               = ByteMaskShiftData(6, 0b00000001);
             } SeenController = {};
 
-            constexpr static auto StandbyMode             = ByteMaskShiftData(2, 0b00000100));
+            constexpr static auto StandbyMode             = ByteMaskShiftData(2, 0b00000100);
             constexpr static auto Error                   = ByteMaskShiftData(3, 0b10000000);
             constexpr static auto FilterTimerExpired      = ByteMaskShiftData(7, 0b01000000);
         } IndoorUnit = {};
