@@ -147,6 +147,7 @@ climate::ClimateTraits FujitsuHalcyonController::traits() {
 
     auto features = this->controller->get_features();
     auto traits = ClimateTraits();
+    ESP_LOGI(TAG, "Traits");
 
     // Target temperature / Setpoint
     traits.set_visual_temperature_step(1);
