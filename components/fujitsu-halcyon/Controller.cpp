@@ -230,20 +230,29 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
         tx_packet.TokenDestinationType = this->next_token_destination_type;
         tx_packet.TokenDestinationAddress = this->next_token_destination_type == AddressTypeEnum::Controller ? this->controller_address + 1 : 1;
 
-        if (this->initialization_stage == InitializationStageEnum::FeatureRequest)
+        if (this->initialization_stage == InitializationStageEnum::FeatureRequest) {
             tx_packet.Type = PacketTypeEnum::Features;
-        else if ((error_flag_changed && this->is_primary_controller()) ||
-                 (packet.Type == PacketTypeEnum::Error && !this->is_primary_controller())) {
+            ESP_LOGD(TAG, "Sending Features packet (Type=%d)", static_cast<int>(tx_packet.Type));
+        }
+        else if (error_flag_changed && this->is_primary_controller()) {
+            // Only primary controller should respond to error flag changes
             tx_packet.Type = PacketTypeEnum::Error;
             tx_packet.Error.ErrorCode = 1; // Generic error code
+            ESP_LOGD(TAG, "Sending Error packet (Type=%d, ErrorCode=%d)", static_cast<int>(tx_packet.Type), tx_packet.Error.ErrorCode);
             // Ensure Error packets don't process as Config packets
             memset(&tx_packet.Config, 0, sizeof(tx_packet.Config));
             memset(&tx_packet.Features, 0, sizeof(tx_packet.Features));
             memset(&tx_packet.Function, 0, sizeof(tx_packet.Function));
         }
+        else if (!this->function_queue.empty()) {
+            tx_packet.Type = PacketTypeEnum::Function;
+            tx_packet.Function = this->function_queue.front();
+            this->function_queue.pop();
+        }
         else {
             // First CONFIG packet sent from Fujitsu controller has write flag set, but we do not restore state at this time
             tx_packet.Type = PacketTypeEnum::Config;
+            ESP_LOGD(TAG, "Sending Config packet (Type=%d)", static_cast<int>(tx_packet.Type));
             tx_packet.Config = this->current_configuration;
             tx_packet.Config.Controller.Temperature = this->changed_configuration.Controller.Temperature;
             tx_packet.Config.Controller.UseControllerSensor = this->changed_configuration.Controller.UseControllerSensor;
