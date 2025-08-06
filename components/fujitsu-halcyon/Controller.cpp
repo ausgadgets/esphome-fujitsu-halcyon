@@ -193,18 +193,8 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
                 break;
 
             case PacketTypeEnum::Features:
-                ESP_LOGD(TAG, "Received Features packet");
-                // Send a generic response to acknowledge receipt
-                Packet ack;
-                ack.Type = PacketTypeEnum::Function;  // Or Status/Config if needed
-                ack.SourceType = AddressTypeEnum::Controller;
-                ack.SourceAddress = this->controller_address;  // set to your assigned address
-                ack.TokenDestinationType = this->SourceType;
-                ack.TokenDestinationAddress = this->SourceAddress;
-            
-                ack.Function.Write = 1;  // Optional: mark that you're responding
-            
-                this->enqueue(ack);
+                this->features = packet.Features;
+                this->set_initialization_stage(InitializationStageEnum::FindNextControllerTx);
                 break;
 
             case PacketTypeEnum::Function:
