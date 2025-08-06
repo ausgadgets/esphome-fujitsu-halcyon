@@ -226,7 +226,6 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
         tx_packet.TokenDestinationType = this->next_token_destination_type;
         tx_packet.TokenDestinationAddress = this->next_token_destination_type == AddressTypeEnum::Controller ? this->controller_address + 1 : 1;
 
-            (this->controller_address == PrimaryAddress ? SecondaryAddress : PrimaryAddress) : 1;
         if (this->initialization_stage == InitializationStageEnum::FeatureRequest)
             tx_packet.Type = PacketTypeEnum::Features;
         else if ((error_flag_changed && this->is_primary_controller()) ||
