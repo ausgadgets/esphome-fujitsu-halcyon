@@ -155,6 +155,9 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
 
     // Parse buffer
     Packet packet(buffer);
+    ESP_LOGD(TAG, "RX packet: Type=%d, SourceType=%d, SourceAddr=%d, TokenDestType=%d, TokenDestAddr=%d", 
+             static_cast<int>(packet.Type), static_cast<int>(packet.SourceType), packet.SourceAddress,
+             static_cast<int>(packet.TokenDestinationType), packet.TokenDestinationAddress);
 
     // Finish initialization
     if (this->initialization_stage == InitializationStageEnum::FindNextControllerRx) {
@@ -170,8 +173,10 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
     if (packet.SourceType == AddressTypeEnum::IndoorUnit) {
         switch (packet.Type) {
             [[likely]] case PacketTypeEnum::Config:
-                if (this->last_error_flag != packet.Config.IndoorUnit.Error)
+                if (this->last_error_flag != packet.Config.IndoorUnit.Error) {
                     error_flag_changed = true;
+                    ESP_LOGD(TAG, "Error flag changed: %d -> %d", this->last_error_flag, packet.Config.IndoorUnit.Error);
+                }
 
                 this->last_error_flag = packet.Config.IndoorUnit.Error;
                 this->current_configuration = packet.Config;
@@ -197,6 +202,7 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
                 this->set_initialization_stage(InitializationStageEnum::FindNextControllerTx);
                 break;
 
+
             case PacketTypeEnum::Function:
                 if (this->callbacks.Function)
                     deferred_callback = [&](){ this->callbacks.Function(packet.Function); };
@@ -218,6 +224,8 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
 
     // Emit a packet if given the token and not processing old packets
     if (lastPacketOnWire && packet.TokenDestinationType == AddressTypeEnum::Controller && packet.TokenDestinationAddress == this->controller_address) {
+        ESP_LOGD(TAG, "Token received - current initialization stage: %d", static_cast<int>(this->initialization_stage));
+        
         Packet tx_packet;
         tx_packet.SourceType = AddressTypeEnum::Controller;
         tx_packet.SourceAddress = this->controller_address;
@@ -314,6 +322,8 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
         }
 
         Packet::Buffer b = tx_packet.to_buffer();
+        ESP_LOGD(TAG, "TX packet raw bytes: %02x %02x %02x %02x %02x %02x %02x %02x", 
+                 b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7]);
         // TODO Should check have not missed tx window before tx...
         // Need to use RX_TIMEOUT interrupt to get accurate rx timestamp?
         // Can drop lastPacketOnWire check if implemented
