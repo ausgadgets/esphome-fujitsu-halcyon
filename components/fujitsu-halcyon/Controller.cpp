@@ -152,7 +152,7 @@ void Controller::set_initialization_stage(const InitializationStageEnum stage) {
 void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnWire) {
     bool error_flag_changed = false;
     std::function<void()> deferred_callback;
-
+    ESP_LOGI(TAG, "Processing packet - logging is working!");
     // Parse buffer
     Packet packet(buffer);
     ESP_LOGD(TAG, "RX packet: Type=%d, SourceType=%d, SourceAddr=%d, TokenDestType=%d, TokenDestAddr=%d", 
