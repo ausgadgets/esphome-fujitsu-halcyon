@@ -96,7 +96,7 @@ void Controller::uart_event_task() {
 
                 case UART_BREAK:
                     // TODO Why rx break after tx?
-                    ESP_LOGD(TAG, "UART break!");
+                    ESP_LOGI(TAG, "UART break!");
                     break;
 
                 case UART_BUFFER_FULL:
@@ -157,7 +157,7 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
     ESP_LOGI(TAG, "Processing packet - logging is working!");
     // Parse buffer
     Packet packet(buffer);
-    ESP_LOGD(TAG, "RX packet: Type=%d, SourceType=%d, SourceAddr=%d, TokenDestType=%d, TokenDestAddr=%d", 
+    ESP_LOGI(TAG, "RX packet: Type=%d, SourceType=%d, SourceAddr=%d, TokenDestType=%d, TokenDestAddr=%d", 
              static_cast<int>(packet.Type), static_cast<int>(packet.SourceType), packet.SourceAddress,
              static_cast<int>(packet.TokenDestinationType), packet.TokenDestinationAddress);
 
@@ -177,7 +177,7 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
             [[likely]] case PacketTypeEnum::Config:
                 if (this->last_error_flag != packet.Config.IndoorUnit.Error) {
                     error_flag_changed = true;
-                    ESP_LOGD(TAG, "Error flag changed: %d -> %d", this->last_error_flag, packet.Config.IndoorUnit.Error);
+                    ESP_LOGI(TAG, "Error flag changed: %d -> %d", this->last_error_flag, packet.Config.IndoorUnit.Error);
                 }
 
                 this->last_error_flag = packet.Config.IndoorUnit.Error;
@@ -226,7 +226,7 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
 
     // Emit a packet if given the token and not processing old packets
     if (lastPacketOnWire && packet.TokenDestinationType == AddressTypeEnum::Controller && packet.TokenDestinationAddress == this->controller_address) {
-        ESP_LOGD(TAG, "Token received - current initialization stage: %d", static_cast<int>(this->initialization_stage));
+        ESP_LOGI(TAG, "Token received - current initialization stage: %d", static_cast<int>(this->initialization_stage));
         
         Packet tx_packet;
         tx_packet.SourceType = AddressTypeEnum::Controller;
@@ -242,13 +242,13 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
 
         if (this->initialization_stage == InitializationStageEnum::FeatureRequest) {
             tx_packet.Type = PacketTypeEnum::Features;
-            ESP_LOGD(TAG, "Sending Features packet (Type=%d)", static_cast<int>(tx_packet.Type));
+            ESP_LOGI(TAG, "Sending Features packet (Type=%d)", static_cast<int>(tx_packet.Type));
         }
         else if (error_flag_changed && this->is_primary_controller()) {
             // Only primary controller should respond to error flag changes
             tx_packet.Type = PacketTypeEnum::Error;
             tx_packet.Error.ErrorCode = 1; // Generic error code
-            ESP_LOGD(TAG, "Sending Error packet (Type=%d, ErrorCode=%d)", static_cast<int>(tx_packet.Type), tx_packet.Error.ErrorCode);
+            ESP_LOGI(TAG, "Sending Error packet (Type=%d, ErrorCode=%d)", static_cast<int>(tx_packet.Type), tx_packet.Error.ErrorCode);
             // Ensure Error packets don't process as Config packets
             memset(&tx_packet.Config, 0, sizeof(tx_packet.Config));
             memset(&tx_packet.Features, 0, sizeof(tx_packet.Features));
@@ -262,7 +262,7 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
         else {
             // First CONFIG packet sent from Fujitsu controller has write flag set, but we do not restore state at this time
             tx_packet.Type = PacketTypeEnum::Config;
-            ESP_LOGD(TAG, "Sending Config packet (Type=%d)", static_cast<int>(tx_packet.Type));
+            ESP_LOGI(TAG, "Sending Config packet (Type=%d)", static_cast<int>(tx_packet.Type));
             tx_packet.Config = this->current_configuration;
             tx_packet.Config.Controller.Temperature = this->changed_configuration.Controller.Temperature;
             tx_packet.Config.Controller.UseControllerSensor = this->changed_configuration.Controller.UseControllerSensor;
@@ -324,7 +324,7 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
         }
 
         Packet::Buffer b = tx_packet.to_buffer();
-        ESP_LOGD(TAG, "TX packet raw bytes: %02x %02x %02x %02x %02x %02x %02x %02x", 
+        ESP_LOGI(TAG, "TX packet raw bytes: %02x %02x %02x %02x %02x %02x %02x %02x", 
                  b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7]);
         // TODO Should check have not missed tx window before tx...
         // Need to use RX_TIMEOUT interrupt to get accurate rx timestamp?
