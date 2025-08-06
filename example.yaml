@@ -6,7 +6,7 @@ substitutions:
 
 external_components:
   - source: github://Omniflux/esphome-tzsp
-  - source: github://Omniflux/esphome-fujitsu-halcyon
+  - source: github://ausgadgets/esphome-fujitsu-halcyon
 
 packages:
   wifi: !include common/wifi.yaml
