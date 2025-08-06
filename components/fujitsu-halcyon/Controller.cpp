@@ -232,6 +232,10 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
                  (packet.Type == PacketTypeEnum::Error && !this->is_primary_controller())) {
             tx_packet.Type = PacketTypeEnum::Error;
             tx_packet.Error.ErrorCode = 1; // Generic error code
+            // Ensure Error packets don't process as Config packets
+            memset(&tx_packet.Config, 0, sizeof(tx_packet.Config));
+            memset(&tx_packet.Features, 0, sizeof(tx_packet.Features));
+            memset(&tx_packet.Function, 0, sizeof(tx_packet.Function));
         }
         else {
             // First CONFIG packet sent from Fujitsu controller has write flag set, but we do not restore state at this time
