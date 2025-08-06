@@ -23,6 +23,7 @@ Packet::Packet(Buffer buffer) {
     this->TokenDestinationType = static_cast<AddressTypeEnum>(getField(BMS.TokenDestinationType));
     this->TokenDestinationAddress = getField(BMS.TokenDestinationAddress);
     ESP_LOGE(TAG, "Destination Address: %s", esp_err_to_name(TokenDestinationAddress));
+    ESP_LOGI(TAG, "Destination Address: %s", esp_err_to_name(TokenDestinationAddress));
 
     this->Type = static_cast<PacketTypeEnum>(getField(BMS.Type));
 
@@ -34,7 +35,7 @@ Packet::Packet(Buffer buffer) {
 
                 this->Config.IndoorUnit.SeenController.Primary = getField(BMS.Config.IndoorUnit.SeenController.Primary);
                 this->Config.IndoorUnit.SeenController.Secondary = getField(BMS.Config.IndoorUnit.SeenController.Secondary);
-
+                ESP_LOGE("CONFIG:");
                 this->Config.IndoorUnit.Lock.All = getField(BMS.Config.IndoorUnit.Lock.All);
                 this->Config.IndoorUnit.Lock.Timer = getField(BMS.Config.IndoorUnit.Lock.Timer);
                 this->Config.IndoorUnit.Lock.Mode = getField(BMS.Config.IndoorUnit.Lock.Mode);
