@@ -6,8 +6,9 @@
 
 namespace fujitsu_general::airstage::h {
 
-constexpr uint8_t PrimaryAddress = 0;
-constexpr uint8_t MaxAddress = 15;
+constexpr uint8_t PrimaryAddress = 32;
+constexpr uint8_t SecondaryAddress = 33;
+constexpr uint8_t MaxAddress = 64;
 
 enum class AddressTypeEnum : uint8_t {
     IndoorUnit,
