@@ -173,16 +173,18 @@ climate::ClimateTraits FujitsuHalcyonController::traits() {
         traits.add_supported_mode(ClimateMode::CLIMATE_MODE_COOL);
 
     // Fan mode / speed
-    if (features.FanSpeed.Quiet)
+   
         traits.add_supported_fan_mode(ClimateFanMode::CLIMATE_FAN_QUIET);
-    if (features.FanSpeed.Low)
+    
         traits.add_supported_fan_mode(ClimateFanMode::CLIMATE_FAN_LOW);
-    if (features.FanSpeed.Medium)
+    
         traits.add_supported_fan_mode(ClimateFanMode::CLIMATE_FAN_MEDIUM);
-    if (features.FanSpeed.High)
+   
         traits.add_supported_fan_mode(ClimateFanMode::CLIMATE_FAN_HIGH);
-    if (features.FanSpeed.Auto)
+   
         traits.add_supported_fan_mode(ClimateFanMode::CLIMATE_FAN_AUTO);
+
+    
 
     // Economy mode
     if (features.EconomyMode)
