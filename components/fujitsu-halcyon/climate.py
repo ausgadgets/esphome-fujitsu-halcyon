@@ -68,8 +68,8 @@ FujitsuHalcyonController = fujitsu_general_airstage_h_controller_ns.class_("Fuji
 
 CONFIG_SCHEMA = climate.climate_schema(FujitsuHalcyonController).extend(
     {
-        cv.Optional(CONF_CONTROLLER_ADDRESS, default=32): cv.int_range(0, 64),
-        cv.Optional(CONF_TEMPERATURE_CONTROLLER_ADDRESS, default=32): cv.int_range(0, 64),
+        cv.Optional(CONF_CONTROLLER_ADDRESS, default=0): cv.int_range(0, 15),
+        cv.Optional(CONF_TEMPERATURE_CONTROLLER_ADDRESS, default=0): cv.int_range(0, 15),
         cv.Optional(CONF_IGNORE_LOCK, default=False): cv.boolean,
         cv.Optional(CONF_TEMPERATURE_SENSOR): cv.use_id(sensor.Sensor),
         cv.Optional(CONF_HUMIDITY_SENSOR): cv.use_id(sensor.Sensor),
