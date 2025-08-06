@@ -4,10 +4,11 @@
 #include <cmath>
 #include <cstring>
 
-#include <esp_log.h>
+// #include <esp_log.h>
 // Log through esphome instead of standard esp logging
-// #include <esphome/core/log.h>
+#include <esphome/core/log.h>
 // using esphome::esp_log_printf_;
+using esphome::esp_log_printf_;
 
 namespace fujitsu_general::airstage::h {
 
