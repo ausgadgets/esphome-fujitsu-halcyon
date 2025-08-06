@@ -185,6 +185,9 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
                 break;
 
             case PacketTypeEnum::Error:
+                ESP_LOGW(TAG, "Received Error packet with code: %d", packet.Error.ErrorCode);
+                // Don't propagate error condition to avoid infinite error loops
+                error_flag_changed = false;
                 if (this->callbacks.Error)
                     deferred_callback = [&](){ this->callbacks.Error(packet); };
                 break;
