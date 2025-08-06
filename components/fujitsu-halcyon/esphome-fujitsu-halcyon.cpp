@@ -105,8 +105,12 @@ void FujitsuHalcyonController::log_buffer(const char* dir, const uint8_t* buf, s
 
 void FujitsuHalcyonController::dump_config() {
     LOG_CLIMATE("", "FujitsuHalcyonController", this);
-    ESP_LOGCONFIG(TAG, "  Controller Address: %u (%s)", this->controller_address_, ControllerName[std::clamp(static_cast<size_t>(this->controller_address_), 0u, ControllerName.size() - 1)]);
-    ESP_LOGCONFIG(TAG, "  Remote Temperature Controller Address: %u (%s)", this->temperature_controller_address_, ControllerName[std::clamp(static_cast<size_t>(this->temperature_controller_address_), 0u, ControllerName.size() - 1)]);
+    ESP_LOGCONFIG(TAG, "  Controller Address: %u (%s)", this->controller_address_, 
+        this->controller_address_ == 32 ? "Primary" : 
+        this->controller_address_ == 33 ? "Secondary" : "Undocumented");
+    ESP_LOGCONFIG(TAG, "  Remote Temperature Controller Address: %u (%s)", this->temperature_controller_address_, 
+        this->temperature_controller_address_ == 32 ? "Primary" : 
+        this->temperature_controller_address_ == 33 ? "Secondary" : "Undocumented");
     LOG_SENSOR("  ", "Remote Temperature Controller Sensor", this->remote_sensor);
     LOG_SENSOR("  ", "Temperature Sensor", this->temperature_sensor_);
     LOG_SENSOR("  ", "Humidity Sensor", this->humidity_sensor_);
