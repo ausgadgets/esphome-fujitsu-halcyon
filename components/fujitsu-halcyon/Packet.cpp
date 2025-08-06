@@ -35,7 +35,7 @@ Packet::Packet(Buffer buffer) {
 
                 this->Config.IndoorUnit.SeenController.Primary = getField(BMS.Config.IndoorUnit.SeenController.Primary);
                 this->Config.IndoorUnit.SeenController.Secondary = getField(BMS.Config.IndoorUnit.SeenController.Secondary);
-                ESP_LOGE("CONFIG:");
+                ESP_LOGI("CONFIG:");
                 this->Config.IndoorUnit.Lock.All = getField(BMS.Config.IndoorUnit.Lock.All);
                 this->Config.IndoorUnit.Lock.Timer = getField(BMS.Config.IndoorUnit.Lock.Timer);
                 this->Config.IndoorUnit.Lock.Mode = getField(BMS.Config.IndoorUnit.Lock.Mode);
