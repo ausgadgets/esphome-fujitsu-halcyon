@@ -161,15 +161,26 @@ climate::ClimateTraits FujitsuHalcyonController::traits() {
     traits.set_supports_current_humidity(this->humidity_sensor_ != nullptr);
 
     // Mode
-    if (features.Mode.Auto)
+    // if (features.Mode.Auto)
+    //     traits.add_supported_mode(ClimateMode::CLIMATE_MODE_HEAT_COOL);
+    // if (features.Mode.Heat)
+    //     traits.add_supported_mode(ClimateMode::CLIMATE_MODE_HEAT);
+    // if (features.Mode.Fan)
+    //     traits.add_supported_mode(ClimateMode::CLIMATE_MODE_FAN_ONLY);
+    // if (features.Mode.Dry)
+    //     traits.add_supported_mode(ClimateMode::CLIMATE_MODE_DRY);
+    // if (features.Mode.Cool)
+    //     traits.add_supported_mode(ClimateMode::CLIMATE_MODE_COOL);
+
+
         traits.add_supported_mode(ClimateMode::CLIMATE_MODE_HEAT_COOL);
-    if (features.Mode.Heat)
+
         traits.add_supported_mode(ClimateMode::CLIMATE_MODE_HEAT);
-    if (features.Mode.Fan)
+
         traits.add_supported_mode(ClimateMode::CLIMATE_MODE_FAN_ONLY);
-    if (features.Mode.Dry)
+
         traits.add_supported_mode(ClimateMode::CLIMATE_MODE_DRY);
-    if (features.Mode.Cool)
+    
         traits.add_supported_mode(ClimateMode::CLIMATE_MODE_COOL);
 
     // Fan mode / speed
