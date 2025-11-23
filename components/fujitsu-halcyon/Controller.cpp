@@ -171,10 +171,14 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
             [[likely]] case PacketTypeEnum::Config:
                 if (this->initialization_stage == InitializationStageEnum::DetectFeatureSupport) {
                     if (packet.Config.IndoorUnit.UnknownFlags == 2) { // Guessing this means no feature support among other things
+                        ESP_LOGD(TAG, "Detected Unknown Flag!");
                         this->features = DefaultFeatures;
                         this->set_initialization_stage(InitializationStageEnum::FindNextControllerTx);
                     } else
-                        this->set_initialization_stage(InitializationStageEnum::FeatureRequest);
+                        // this->set_initialization_stage(InitializationStageEnum::FeatureRequest);
+                        ESP_LOGD(TAG, "Not Detected Unknown Flag!");
+                        this->features = DefaultFeatures;
+                        this->set_initialization_stage(InitializationStageEnum::FindNextControllerTx);
                 }
 
                 if (this->last_error_flag != packet.Config.IndoorUnit.Error)
