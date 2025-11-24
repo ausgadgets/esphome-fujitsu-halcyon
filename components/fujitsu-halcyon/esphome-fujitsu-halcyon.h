@@ -62,11 +62,13 @@ class FujitsuHalcyonController : public Component, public climate::Climate, publ
         void set_humidity_sensor(sensor::Sensor* humidity_sensor) { this->humidity_sensor_ = humidity_sensor; }
         void set_temperature_sensor(sensor::Sensor* temperature_sensor) { this->temperature_sensor_ = temperature_sensor; }
         void set_temperature_controller_address(uint8_t temperature_controller_address) { this->temperature_controller_address_ = temperature_controller_address; }
+        void set_disable_feature_request(bool disable) { this->disable_feature_request_ = disable; }
 
     protected:
         uint8_t controller_address_{};
         uint8_t temperature_controller_address_{};
         bool ignore_lock_{};
+        bool disable_feature_request_{};
         sensor::Sensor* humidity_sensor_{};
         sensor::Sensor* temperature_sensor_{};
 

@@ -170,15 +170,18 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
         switch (packet.Type) {
             [[likely]] case PacketTypeEnum::Config:
                 if (this->initialization_stage == InitializationStageEnum::DetectFeatureSupport) {
-                    if (packet.Config.IndoorUnit.UnknownFlags == 2) { // Guessing this means no feature support among other things
-                        ESP_LOGD(TAG, "Detected Unknown Flag!");
+                    if (this->force_disable_feature_request) {
+                        ESP_LOGW(TAG, "Feature request disabled via configuration; using default features");
                         this->features = DefaultFeatures;
                         this->set_initialization_stage(InitializationStageEnum::FindNextControllerTx);
-                    } else
-                        // this->set_initialization_stage(InitializationStageEnum::FeatureRequest);
-                        ESP_LOGD(TAG, "Not Detected Unknown Flag!");
+                    } else if (packet.Config.IndoorUnit.UnknownFlags == 2) { // Guessing this means no feature support among other things
+                        ESP_LOGD(TAG, "Indoor unit indicates feature query unsupported; using default features");
                         this->features = DefaultFeatures;
                         this->set_initialization_stage(InitializationStageEnum::FindNextControllerTx);
+                    } else {
+                        ESP_LOGD(TAG, "Feature query supported; requesting features");
+                        this->set_initialization_stage(InitializationStageEnum::FeatureRequest);
+                    }
                 }
 
                 if (this->last_error_flag != packet.Config.IndoorUnit.Error)

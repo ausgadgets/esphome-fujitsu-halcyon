@@ -48,6 +48,7 @@ CONF_ADVANCE_HORIZONTAL_LOUVER = "advance_horizontal_louver"
 CONF_RESET_FILTER_TIMER = "reset_filter_timer"
 CONF_FILTER_TIMER_EXPIRED = "filter_timer_expired"
 CONF_REINITIALIZE = "reinitialize"
+CONF_DISABLE_FEATURE_REQUEST = "disable_feature_request"
 
 CONF_FUNCTION = "function"
 CONF_FUNCTION_VALUE = "function_value"
@@ -71,6 +72,7 @@ CONFIG_SCHEMA = climate.climate_schema(FujitsuHalcyonController).extend(
         cv.Optional(CONF_CONTROLLER_ADDRESS, default=0): cv.int_range(0, 15),
         cv.Optional(CONF_TEMPERATURE_CONTROLLER_ADDRESS, default=0): cv.int_range(0, 15),
         cv.Optional(CONF_IGNORE_LOCK, default=False): cv.boolean,
+        cv.Optional(CONF_DISABLE_FEATURE_REQUEST, default=False): cv.boolean,
         cv.Optional(CONF_TEMPERATURE_SENSOR): cv.use_id(sensor.Sensor),
         cv.Optional(CONF_HUMIDITY_SENSOR): cv.use_id(sensor.Sensor),
         cv.Optional(CONF_FUNCTION, default={CONF_NAME: "Function", CONF_MODE: "BOX"}): number.number_schema(
@@ -162,6 +164,7 @@ async def to_code(config):
 
     cg.add(var.set_temperature_controller_address(config[CONF_TEMPERATURE_CONTROLLER_ADDRESS]))
     cg.add(var.set_ignore_lock(config[CONF_IGNORE_LOCK]))
+    cg.add(var.set_disable_feature_request(config[CONF_DISABLE_FEATURE_REQUEST]))
 
     varx = cg.Pvariable(config[CONF_STANDBY_MODE][CONF_ID], var.standby_sensor)
     await binary_sensor.register_binary_sensor(varx, config[CONF_STANDBY_MODE])

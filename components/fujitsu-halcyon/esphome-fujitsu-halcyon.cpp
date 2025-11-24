@@ -34,6 +34,8 @@ void FujitsuHalcyonController::setup() {
         *static_cast<uart::IDFUARTComponent*>(this->parent_)->get_uart_event_queue()
     );
 
+    this->controller->set_force_disable_feature_request(this->disable_feature_request_);
+
     if (!this->controller->start()) {
         ESP_LOGE(TAG, "Failed to start controller");
         this->mark_failed();

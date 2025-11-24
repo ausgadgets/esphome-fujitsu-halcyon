@@ -64,6 +64,7 @@ climate:
   #humidity_sensor: my_humidity_sensor  # ESPHome sensor to read humidity from
 
   #ignore_lock: true  # Ignore child/part/feature lock set on unit or primary/central remote control
+  #disable_feature_request: true  # Skip FEATURES request for legacy indoor units that error when queried
 
   # To capture communications for debugging / analysis
   # Use Wireshark with https://github.com/Omniflux/fujitsu-airstage-h-dissector
